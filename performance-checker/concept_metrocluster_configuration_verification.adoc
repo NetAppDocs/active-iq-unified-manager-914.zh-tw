@@ -1,0 +1,30 @@
+---
+permalink: performance-checker/concept_metrocluster_configuration_verification.html 
+sidebar: sidebar 
+keywords: metrocluster, configuration, verification 
+summary: 您可以確保正確設定VMware組態、以避免MetroCluster 在鏡射工作負載上發生效能問題MetroCluster 。您也可以變更組態或升級軟體或硬體元件、以改善工作負載效能。 
+---
+= 驗證組態MetroCluster
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以確保正確設定透過VMware over FC和IP組態的鏡射工作負載、避免效能問題MetroCluster 。MetroCluster您也可以變更組態或升級軟體或硬體元件、以改善工作負載效能。
+
+ https://docs.netapp.com/us-en/ontap-metrocluster/index.html["資訊文件MetroCluster"]如需在 MetroCluster 組態中設定叢集的指示，包括光纖通道（ FC ）交換器，纜線和交換器間連結（ ISL ）。此外、它也能協助您設定MetroCluster 支援功能、讓本機和遠端叢集能夠與鏡射Volume資料通訊。如需 MetroCluster over IP 設定的特定資訊，請參閱 https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/index.html["安裝MetroCluster 一套靜態IP組態"]。
+
+您可以將 MetroCluster 組態與中的需求進行比較 https://docs.netapp.com/us-en/ontap-metrocluster/index.html["資訊文件MetroCluster"]，以判斷變更或升級 MetroCluster 組態中的元件是否能改善工作負載效能。此比較可協助您回答下列問題：
+
+* 控制器是否適合您的工作負載？
+* 您是否需要將ISL套裝組合升級至更大的頻寬、才能處理更多處理量？
+* 您是否可以調整交換器上的緩衝區對緩衝區點數（英國廣播公司）來增加頻寬？
+* 如果您的工作負載對固態磁碟機（SSD）儲存設備的寫入處理量很高、您是否需要升級FC至SAS橋接器以因應處理量？
+
+
+*相關資訊*
+
+* 如需更換或升級 MetroCluster 元件的相關資訊，請參閱 https://docs.netapp.com/us-en/ontap-metrocluster/index.html["資訊文件MetroCluster"]。
+* 如需升級控制器的相關資訊，請參閱 https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html["使用MetroCluster 切換和切換功能升級採用SFC組態的控制器"]和 https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html["使用MetroCluster 切換和切換功能、在S還原IP組態中升級控制器"]
+

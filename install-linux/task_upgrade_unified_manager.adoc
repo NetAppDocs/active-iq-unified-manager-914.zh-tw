@@ -1,0 +1,134 @@
+---
+permalink: install-linux/task_upgrade_unified_manager.html 
+sidebar: sidebar 
+keywords: upgrade, unified manager 
+summary: 您可以在Linux平台上下載並執行安裝檔案、以升級Unified Manager。 
+---
+= 升級Unified Manager
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以下載並執行 Linux 平台上的安裝檔案、從 Unified Manager 9.12 或 9.13 升級至 9.14 。
+
+*您需要的是什麼*
+
+* 您要升級Unified Manager的系統必須符合系統和軟體需求。
++
+請參閱。 link:concept_virtual_infrastructure_or_hardware_system_requirements.html["硬體系統需求"]
+
++
+請參閱。 link:reference_red_hat_and_centos_software_and_installation_requirements.html["Linux軟體與安裝需求"]
+
+* 您必須訂閱Red Hat Enterprise Linux訂閱管理程式。
+* 升級Unified Manager之前、您必須先安裝或升級至正確版本的OpenJDK。
++
+請參閱。 link:task_upgrade_openjdk_on_linux_ocum.html["升級Linux上的JRE"]
+
+* 為了避免資料遺失、您必須先建立Unified Manager資料庫的備份、以防升級期間發生問題。NetApp 建議您將備份檔案從目錄移 `/opt/netapp/data`至外部位置。
+* 在升級期間、系統可能會提示您確認是否要保留先前的預設設定、以保留13個月的效能資料、或將其變更為6個月。確認後、系統會在6個月後清除歷史效能資料。
+* 您應該已經完成所有執行中的作業、因為Unified Manager在升級過程中無法使用。
+* MySQL Community Edition會在Unified Manager升級期間自動升級。如果系統上安裝的 MySQL 版本早於 8.0.34 、 Unified Manager 升級程序會自動將 MySQL 升級至 8.0.34 。
+
+
+.步驟
+. 登入目標Red Hat Enterprise Linux或CentOS伺服器。
+. 將Unified Manager產品組合下載至伺服器。
++
+請參閱。 link:task_download_unified_manager.html["正在下載Unified Manager for Linux"]
+
+. 瀏覽至目標目錄並展開Unified Manager套裝組合：
++
+`unzip ActiveIQUnifiedManager-<version>.zip`
+
++
+Unified Manager所需的RPM模組會解壓縮至目標目錄。
+
+. 驗證目錄中是否有下列模組可用：
++
+`ls *.rpm`
+
++
+`netapp-um<version>.x86_64.rpm`
+
+. 執行安裝前指令碼、確保沒有系統組態設定或任何可能與升級衝突的安裝軟體：
++
+`sudo ./pre_install_check.sh`
+
++
+安裝前指令碼會檢查系統是否有有效的Red Hat Enterprise Linux訂閱、以及是否有必要的軟體儲存庫存取權。如果指令碼發現任何問題、您必須修正問題並繼續升級。
+
++
+如果偵測到任何遺失的套件，請執行中所述的步驟link:../install-linux/task_upgrade_unified_manager.html#additional-steps-to-perform-for-missing-packages["針對遺失的套件執行其他步驟"]。如果沒有遺失的套件、請繼續執行後續步驟。
+
+. 使用下列指令碼升級Unified Manager：
++
+`upgrade.sh`
+
++
+此指令碼會自動執行RPM模組、並升級必要的支援軟體及其上執行的Unified Manager模組。此外、升級指令碼會檢查是否有任何系統組態設定或任何可能與升級衝突的安裝軟體。如果指令碼發現任何問題、您必須先修正問題、然後再升級Unified Manager。如果您先前在升級Unified Manager之前安裝過諸如_net-snmp_之類的套件、MySQL相依性可能會在升級期間解除安裝套件。您需要再次手動安裝套件、才能繼續使用。
+
+. 升級完成後、捲動回訊息、直到看到訊息顯示Unified Manager Web UI的IP位址或URL、維護使用者名稱（umadmin）和預設密碼。
++
+此訊息類似於下列內容：
+
++
+[listing]
+----
+Active IQ Unified Manager upgraded successfully.
+Use a web browser and one of the following URLs to access the Unified Manager GUI:
+
+https://default_ip_address/    (if using IPv4)
+https://[default_ip_address]/  (if using IPv6)
+https://fully_qualified_domain_name/
+----
+
+
+在支援的網頁瀏覽器的新視窗中輸入指定的IP位址或URL、以啟動Unified Manager網路UI、然後使用您先前設定的相同維護使用者名稱（umadmin）和密碼登入。
+
+
+
+== 針對遺失的套件執行其他步驟
+
+如果您的站台在升級期間偵測到任何遺失的套件、或您的系統未連線至網際網路、或您未使用Red Hat Enterprise Linux儲存庫、請執行下列步驟、判斷您是否遺漏任何必要的套件、然後下載這些套件。
+
+
+NOTE: 這些步驟必須在主要程序的步驟_5_之後執行。此程序可升級Unified Manager、您不需要執行任何額外的升級步驟。
+
+. 檢視可用和不可用套件的清單：
++
+`yum install netapp-um<version>.x86_64.rpm --assumeno`
+
++
+「正在安裝：」區段中的項目是目前目錄中可用的套件、而「正在安裝相依套件：」區段中的項目是您系統上遺失的套件。
+
+. 在具有網際網路存取權限的其他系統上、執行下列命令來下載遺失的套件。
++
+`yum install package_name --downloadonly --downloaddir=.`
+
++
+這些套件會下載到指定為的目錄 `--downloaddir=`中。
+
++
+由於Red Hat Enterprise Linux系統並未一律啟用外掛程式「yum外掛程式-downloadonly」、因此您可能需要啟用下載套件的功能、而不需安裝：
+
++
+`yum install yum-plugin-downloadonly`
+
+. 將下載的套件複製到安裝系統上解壓縮Unified Manager套件的目錄。
+. 將目錄變更至該目錄、然後執行下列命令來安裝遺失的套件及其相依性。
++
+`yum install *.rpm`
+
+. 啟動Unified Manager伺服器。執行下列命令：
++
+`systemctl start ocie`
+
++
+`systemctl start ocieau`
+
+
+
+此程序可完成Unified Manager升級程序。在支援的網頁瀏覽器的新視窗中輸入指定的IP位址或URL、以啟動Unified Manager網路UI、然後使用您先前設定的相同維護使用者名稱（umadmin）和密碼登入。

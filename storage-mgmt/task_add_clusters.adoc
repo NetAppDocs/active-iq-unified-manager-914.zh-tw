@@ -1,0 +1,100 @@
+---
+permalink: storage-mgmt/task_add_clusters.html 
+sidebar: sidebar 
+keywords: add cluster 
+summary: 您可以將叢集新增Active IQ Unified Manager 至支援功能、以便監控叢集。這包括取得叢集資訊（例如叢集的健全狀況、容量、效能和組態）的能力、以便找出並解決可能發生的任何問題。 
+---
+= 新增叢集
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以將叢集新增Active IQ Unified Manager 至支援功能、以便監控叢集。這包括取得叢集資訊（例如叢集的健全狀況、容量、效能和組態）的能力、以便找出並解決可能發生的任何問題。
+
+*您需要的是什麼*
+
+* 您必須具有應用程式管理員角色或儲存管理員角色。
+* 您必須具備下列資訊：
++
+** Unified Manager 支援內部部署的 ONTAP 叢集、 ONTAP Select 、 Cloud Volumes ONTAP 。
+** 您必須擁有叢集的主機名稱或叢集管理IP位址（IPV4或IPV6）。
++
+使用主機名稱時、必須解析為叢集管理LIF的叢集管理IP位址。如果您使用節點管理LIF、則作業會失敗。
+
+** 您必須擁有使用者名稱和密碼才能存取叢集。
++
+此帳戶必須將「應用程式」存取權限設為_ontapi_、_consol__和_http。
+
+** 您必須知道使用HTTPS傳輸協定（通常為連接埠443）連線至叢集的連接埠號碼。
+** 叢集必須執行ONTAP 的是版本不穩定的9.1軟體或更新版本。
+** 您必須在Unified Manager伺服器上有足夠的空間。當超過90%的空間已用完時、您將無法將叢集新增至伺服器。
+** 您擁有必要的憑證：
++
+* SSL （ HTTPS ）憑證 * ：此憑證由 Unified Manager 擁有。預設的自我簽署SSL（HTTPS）憑證會以全新安裝的Unified Manager產生。NetApp建議您將其升級至CA簽署的憑證、以獲得更好的安全性。如果伺服器憑證過期、您應該重新產生該憑證、然後重新啟動Unified Manager、讓服務整合新的憑證。如需重新產生 SSL 憑證的詳細資訊，請參閱link:../config/task_generate_an_https_security_certificate_ocf.html["產生HTTPS安全性憑證"]。
+
++
+* EMS 憑證 * ：此憑證由 Unified Manager 擁有。它用於驗證從 ONTAP 接收的 EMS 通知。
+
++
+*相互TLS通訊的證書*：在Unified Manager與ONTAP 支援中心之間進行相互TLS通訊時使用。憑證型驗證會根據ONTAP 版本啟用叢集的驗證。如果執行ONTAP 版本資訊功能的叢集低於9.5版、則不會啟用憑證型驗證。
+
++
+如果您要更新舊版 Unified Manager 、則叢集不會自動啟用憑證型驗證。不過、您可以修改及儲存叢集詳細資料來啟用此功能。如果憑證過期、您應該重新產生憑證以納入新的憑證。如需檢視及重新產生憑證的詳細資訊，請參閱link:../storage-mgmt/task_edit_clusters.html["編輯叢集"]。
+
++
+[NOTE]
+====
+*** 您可以從 Web UI 新增叢集、並自動啟用憑證型驗證。
+*** 您可以透過 Unified Manager CLI 新增叢集、預設不會啟用憑證型驗證。如果您使用 Unified Manager CLI 新增叢集、則必須使用 Unified Manager UI 來編輯叢集。您可以參閱link:https://docs.netapp.com/us-en/active-iq-unified-manager/events/reference_supported_unified_manager_cli_commands.html["支援的Unified Manager CLI命令"]使用 Unified Manager CLI 新增叢集。
+*** 如果叢集已啟用憑證型驗證、且您從伺服器備份Unified Manager、並還原至另一個變更主機名稱或IP位址的Unified Manager伺服器、則叢集監控可能會失敗。若要避免故障、請編輯並儲存叢集詳細資料。如需編輯叢集詳細資料的詳細link:../storage-mgmt/task_edit_clusters.html["編輯叢集"]資訊，請參閱。
+*** 在叢集層級上、 Active IQ 介面會新增兩個驗證方法「 cert 」的使用者群組項目。
+
+
+====
++
+* 叢集憑證 * ：此憑證為 ONTAP 所有。您無法使用過期的憑證將叢集新增至 Unified Manager 、如果憑證已過期、則應在新增叢集之前重新產生叢集。有關證書生成的信息，請參閱知識庫 (KB) 文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_renew_an_SSL_certificate_in_ONTAP_9["如何在ONTAP System Manager使用者介面中更新自我簽署的認證"^]。
+
+
+
+* Unified Manager的單一執行個體可支援特定數量的節點。如果您需要監控超出支援節點數的環境、則必須安裝Unified Manager的其他執行個體、以監控部分叢集。若要檢視支援的節點數清單，請參閱 https://www.netapp.com/media/13504-tr4621.pdf["Unified Manager最佳實務做法指南"^]。
+
+
+.步驟
+. 在左導覽窗格中、按一下*儲存管理*>*叢集設定*。
+. 在「叢集設定」頁面上、按一下*「新增*」。
+. 在「新增叢集」對話方塊中、依需要指定值、然後按一下「*提交*」。
+. 在「授權主機」對話方塊中、按一下「*檢視憑證*」以檢視叢集的憑證資訊。
+. 按一下「*是*」。
++
+儲存叢集詳細資料之後、您可以看到叢集的相互 TLS 通訊憑證。
+
++
+如果未啟用憑證型驗證、Unified Manager只會在一開始新增叢集時才檢查憑證。Unified Manager不會檢查每個API呼叫ONTAP 的認證資料以供參考。
+
+
+
+在探索新叢集的所有物件之後、Unified Manager會開始收集前15天的歷史效能資料。這些統計資料是使用資料持續性收集功能來收集。此功能可在新增叢集之後、立即為叢集提供超過兩週的效能資訊。在資料持續性收集週期完成之後、系統會依預設每五分鐘收集一次即時叢集效能資料。
+
+[NOTE]
+====
+由於收集15天的效能資料會佔用大量CPU資源、因此建議您將新增的叢集重新分段、以使資料持續性收集輪詢不會同時在太多叢集上執行。此外、如果您在資料持續性收集期間重新啟動Unified Manager、收集作業將會暫停、而且效能圖表中會出現遺漏時間範圍的落差。
+
+====
+[TIP]
+====
+如果您收到無法新增叢集的錯誤訊息、請檢查下列問題是否存在：
+
+* 如果兩個系統上的時鐘未同步、且Unified Manager HTTPS憑證開始日期晚於叢集上的日期。您必須確保時鐘是使用NTP或類似服務來同步。
+* 如果叢集已達到EMS通知目的地的最大數量、則無法新增Unified Manager位址。根據預設、叢集上只能定義20個EMS通知目的地。
+
+
+====
+*相關資訊*
+
+link:../config/task_add_users.html["新增使用者"]
+
+link:../health-checker/task_view_cluster_list_and_details.html["檢視叢集清單和詳細資料"]
+
+link:../config/task_install_ca_signed_and_returned_https_certificate.html#example-certificate-chain["安裝CA簽署並傳回HTTPS憑證"]

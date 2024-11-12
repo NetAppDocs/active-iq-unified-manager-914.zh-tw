@@ -1,0 +1,114 @@
+---
+permalink: config/task_add_space_to_data_directory_of_um_linux_host.html 
+sidebar: sidebar 
+keywords: add, space, data directory, linux, host 
+summary: '如果您在最初設定 Linux 主機並安裝 Unified Manager 時，分配的磁碟空間不足，無法支援 Unified Manager ，則 `/opt/netapp/data`可增加目錄上的磁碟空間，在安裝後新增磁碟空間 `/opt/netapp/data`。' 
+---
+= 將空間新增至Linux主機的資料目錄
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在最初設定 Linux 主機並安裝 Unified Manager 時，分配的磁碟空間不足，無法支援 Unified Manager ，則 `/opt/netapp/data`可增加目錄上的磁碟空間，在安裝後新增磁碟空間 `/opt/netapp/data`。
+
+*您需要的是什麼*
+
+您必須擁有root使用者存取權、才能存取安裝Unified Manager的Red Hat Enterprise Linux或CentOS Linux機器。
+
+建議您先備份Unified Manager資料庫、再增加資料目錄的大小。
+
+.步驟
+. 以root使用者身分登入您要新增磁碟空間的Linux機器。
+. 依照下列順序停止Unified Manager服務及相關的MySQL軟體：
++
+`systemctl stop ocieau ocie mysqld`
+
+. 建立具有足夠磁碟空間的暫存備份資料夾（例如 `/backup-data`），以便將資料包含在目前目錄中 `/opt/netapp/data`。
+. 將現有目錄的內容和權限組態複製 `/opt/netapp/data`到備份資料目錄：
++
+`cp -arp /opt/netapp/data/* /backup-data`
+
+. 如果已啟用SE Linux：
++
+.. 取得現有資料夾上資料夾的 SE Linux 類型 `/opt/netapp/data`：
++
+`se_type= ls -Z /opt/netapp/data | awk '{print $4}' | awk -F: '{print $3}' | head -1`
+
++
+系統會傳回類似下列的確認訊息：
+
++
+[listing]
+----
+echo $se_type
+mysqld_db_t
+----
+.. 執行chcon命令、為備份目錄設定SE Linux類型：
++
+`chcon -R --type=mysqld_db_t /backup-data`
+
+
+
+. 移除目錄內容 `/opt/netapp/data`：
++
+.. `cd /opt/netapp/data`
+.. `rm -rf *`
+
+
+. 透過 LVM 命令或新增額外的磁碟，將目錄大小最小擴充 `/opt/netapp/data`至 150 GB 。
++
+[NOTE]
+====
+如果您是從磁碟建立 `/opt/netapp/data`，則不應嘗試以 NFS 或 CIFS 共用掛載 `/opt/netapp/data`。因為在這種情況下，如果您嘗試擴充磁碟空間，某些 LVM 命令（例如 `resize`） `extend`可能無法如預期般運作。
+
+====
+. 確認 `/opt/netapp/data`目錄擁有者（ mysql ）和群組（ root ）未變更：
++
+`ls -ltr /opt/netapp/ | grep data`
+
++
+系統會傳回類似下列的確認訊息：
+
++
+[listing]
+----
+drwxr-xr-x.  17 mysql root  4096 Aug 28 13:08 data
+----
+. 如果已啟用 SE Linux ，請確認目錄的內容 `/opt/netapp/data`仍設定為 mysqld_db_t:
++
+.. `touch /opt/netapp/data/abc`
+.. `ls -Z /opt/netapp/data/abc`
++
+系統會傳回類似下列的確認訊息：
+
++
+[listing]
+----
+-rw-r--r--. root root unconfined_u:object_r:mysqld_db_t:s0 /opt/netapp/data/abc
+----
+
+
+. 刪除abc檔案、以避免此無關檔案在未來造成資料庫錯誤。
+. 將內容從備份資料複製回擴充 `/opt/netapp/data`目錄：
++
+`cp -arp /backup-data/* /opt/netapp/data/`
+
+. 如果已啟用SE Linux、請執行下列命令：
++
+`chcon -R --type=mysqld_db_t /opt/netapp/data`
+
+. 啟動MySQL服務：
++
+`systemctl start mysqld`
+
+. MySQL服務啟動後、請依下列順序啟動ocie和ocieau服務：
++
+`systemctl start ocie ocieau`
+
+. 啓動所有服務後，刪除備份文件夾 `/backup-data`：
++
+`rm -rf /backup-data`
+
+

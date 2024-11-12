@@ -1,0 +1,66 @@
+---
+permalink: config/reference_additional_menu_options.html 
+sidebar: sidebar 
+keywords: additional menu, options 
+summary: 下列功能表選項可讓您在Unified Manager伺服器上執行各種管理工作。 
+---
+= 其他功能表選項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+下列功能表選項可讓您在Unified Manager伺服器上執行各種管理工作。
+
+以下是可用的功能表選項：
+
+* *重設伺服器憑證*
++
+重新產生HTTPS伺服器憑證。
+
++
+您可以按一下「*一般*」>「* HTTPS憑證*」>「*重新產生HTTPS憑證*」、在Unified Manager GUI中重新產生伺服器憑證。
+
+* *停用SAML驗證*
++
+停用SAML驗證、使身分識別供應商（IDP）不再為存取Unified Manager GUI的使用者提供登入驗證。當IDP伺服器或SAML組態問題阻礙使用者存取Unified Manager GUI時、通常會使用此主控台選項。
+
+* *外部資料提供者*
++
+提供將Unified Manager連線至外部資料供應商的選項。建立連線之後、效能資料會傳送至外部伺服器、讓儲存效能專家能夠使用協力廠商軟體來記錄效能指標。畫面會顯示下列選項：
+
++
+** *顯示伺服器組態*-顯示外部資料提供者目前的連線和組態設定。
+** *新增/修改伺服器連線*-可讓您輸入外部資料提供者的新連線設定、或是變更現有的設定。
+** *修改伺服器組態*-可讓您輸入外部資料提供者的新組態設定、或是變更現有的設定。
+** *刪除伺服器連線*-刪除與外部資料提供者的連線。
++
+刪除連線後、Unified Manager會失去與外部伺服器的連線。
+
+
+
+* *備份還原*
++
+如需相關資訊，請參閱中的主題link:../health-checker/concept_manage_backup_and_restore_operations.html["管理備份與還原作業"]。
+
+* *效能輪詢時間間隔組態*
++
+提供選項、可設定Unified Manager從叢集收集效能統計資料的頻率。預設收集時間間隔為5分鐘。
+
++
+如果發現大型叢集的集合未準時完成、您可以將此時間間隔變更為10或15分鐘。
+
+* *檢視/變更應用程式連接埠*
++
+提供選項、可變更Unified Manager用於HTTP和HTTPS傳輸協定的預設連接埠（若安全性需要）。HTTP預設連接埠為80、HTTPS預設連接埠為443。
+
+* *控制對MySQL連接埠3306*的存取
++
+控制主機對預設MySQL連接埠3306的存取。基於安全考量、在Linux、Windows及VMware vSphere系統上全新安裝Unified Manager時、透過此連接埠的存取權限僅限於localhost。此選項可讓您切換此連接埠在localhost和遠端主機之間的可見度、也就是如果此連接埠僅在您的環境中啟用localhost、您也可以將此連接埠提供給遠端主機使用。或者、當所有主機都啟用時、您可以將此連接埠的存取限制為僅限localhost。如果先前已在遠端主機上啟用存取、則組態會保留在升級案例中。切換連接埠可見度之後、您應該檢查 Windows 系統上的防火牆設定、如果設定為限制存取 MySQL 連接埠 3306 、請停用防火牆設定。
+
+* *退出*
++
+結束維護主控台功能表。
+
+

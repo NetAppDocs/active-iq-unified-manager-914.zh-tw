@@ -1,0 +1,172 @@
+---
+permalink: install-linux/task_selinux_requirements_for_mounting_opt_netapp.html 
+sidebar: sidebar 
+keywords: unified manager, selinux requirements, mounting, nfs, cifs, share 
+summary: 如果您計畫在NAS或SAN裝置上掛載/opp/netapp或/opp/NetApp/data、且已啟用SELinux、則必須注意下列考量事項。 
+---
+= NFS與CIFS共用的SELinux需求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您計畫掛載或 `/opt/netapp/data`安裝在 NAS 或 SAN 裝置上，且已啟用 SELinux ，則 `/opt/netapp`需要注意一些考量事項。
+
+如果您打算掛載或 `/opt/netapp/data`從根檔案系統以外的任何位置掛載 `/opt/netapp`，而且您的環境中已啟用 SELinux ，則應該為掛載的目錄設定正確的內容。針對您環境中適用的案例、請依照下列步驟設定並確認正確的SELinux內容。
+
+
+
+== 在掛載時設定 SELinux 內容 `/opt/netapp/data`
+
+如果您已在系統中掛載 `/opt/netapp/data` SELinux ，且 SELinux 設定為 `Enforcing`，請確定的 SELinux 內容類型 `/opt/netapp/data`設定為 `mysqld_db_t`，這是資料庫檔案位置的預設內容元素。
+
+. 執行此命令來檢查內容：
++
+`ls -dZ /opt/netapp/data`
+
++
+範例輸出：
+
++
+[listing]
+----
+drwxr-xr-x. mysql root unconfined_u:object_r:default_t:s0 /opt/netapp/data
+----
++
+
+NOTE: 在此輸出中，上下文爲 `default_t`。您應該將此內容變更為 `mysqld_db_t`。
+
+. 執行以下步驟，根據掛載方式設置上下文 `/opt/netapp/data`。
++
+.. 執行下列命令，將內容設定為 `mysqld_db_t`：
+`semanage fcontext -a -t mysqld_db_t "/opt/netapp/data"
+`restorecon -R -v /opt/netapp/data`
+.. 如果您已在中 `/etc/fstab`設定 `/opt/netapp/data`，則應該編輯 `/etc/fstab`檔案。對於 `/opt/netapp/data/` mount 選項，請將 MySQL 標籤新增為：
++
+`context=system_u:object_r:mysqld_db_t:s0`
+
+.. 卸載並重新掛載 `/opt/netapp/data/`以啟用內容。
+.. 如果您有直接 NFS 裝載，請執行下列命令，將內容設定為 `mysqld_db_t`：
++
+`mount <nfsshare>:/<mountpoint> /opt/netapp/data -o context=system_u:object_r:mysqld_db_t:s0`
+
+
+
+. 確認內容設定是否正確：
+
+
+`ls -dZ /opt/netapp/data/`
+
+範例輸出：
+
+[listing]
+----
+drwxr-xr-x. mysql root unconfined_u:object_r:mysqld_db_t:s0 /opt/netapp/data/
+----
+
+
+== 在掛載時設定 SELinux 內容 `/opt/netapp`， `/opt/netapp/data/`也會個別掛載
+
+在此案例中，您首先應依照上一節所述，設定的內容 `/opt/netapp/data/`。設定正確的內容後 `/opt/netapp/data/`，請確定父目錄 `/opt/netapp`的 SELinux 內容未設為 `file_t`。
+
+.步驟
+. 執行此命令來檢查內容：
++
+`ls -dZ /opt/netapp`
+
++
+範例輸出：
+
++
+[listing]
+----
+drwxr-xr-x. mysql root unconfined_u:object_r:file_t:s0 /opt/netapp
+----
++
+在此輸出中，應變更內容 `file_t`。下列命令會將內容設定為 `usr_t`。您可以根據安全需求，將內容設定為任何其他值 `file_t`。
+
+. 根據您的掛載方式執行以下步驟來設置上下文 `/opt/netapp`。
++
+.. 執行下列命令以設定內容：
+
+
+
+
+[listing]
+----
+semanage fcontext -a -t usr_t "/opt/netapp"
+restorecon -v /opt/netapp
+----
+. 如果您已在中 `/etc/fstab`設定 `/opt/netapp`，則應該編輯 `/etc/fstab`檔案。對於 `/opt/netapp` mount 選項，請將 MySQL 標籤新增為：
++
+`context=system_u:object_r:usr_t:s0`
+
+. 卸載，然後重新掛載 `/opt/netapp`以啟用內容。
+. 如果您有直接NFS掛載、請執行下列命令來設定內容：
++
+`mount <nfsshare>:/<mountpoint> /opt/netapp -o context=system_u:object_r:usr_t:s0`
+
++
+.. 確認內容設定是否正確：
++
+`ls -dZ /opt/netapp`
+
++
+範例輸出
+
+
+
+
+
+[listing]
+----
+drwxr-xr-x. mysql root unconfined_u:object_r:usr_t:s0 /opt/netapp
+----
+
+
+== 在掛載時設定 SELinux 內容 `/opt/netapp`，且 `/opt/netapp/data/`不會個別掛載
+
+如果您已在系統中掛載  `/opt/netapp`SELinux ，且 SELinux 設定為 `Enforcing`，請確定的 SELinux 內容類型 `/opt/netapp`設定為 `mysqld_db_t`，這是資料庫檔案位置的預設內容元素。
+
+.步驟
+. 執行此命令來檢查內容：
++
+`ls -dZ /opt/netapp`
+
++
+範例輸出：
+
++
+[listing]
+----
+drwxr-xr-x. mysql root unconfined_u:object_r:default_t:s0 /opt/netapp
+----
++
+
+NOTE: 在此輸出中，上下文爲 `default_t`。您應該將此內容變更為 `mysqld_db_t`。
+
+. 執行以下步驟，根據掛載方式設置上下文 `/opt/netapp`。
++
+.. 執行下列命令，將內容設定為 `mysqld_db_t`：
+`semanage fcontext -a -t mysqld_db_t "/opt/netapp"
+`restorecon -R -v /opt/netapp`
+.. 如果您已在中 `/etc/fstab`設定 `/opt/netapp`，請編輯 `/etc/fstab`檔案。對於 `/opt/netapp/` mount 選項，請將 MySQL 標籤新增為：
+`context=system_u:object_r:mysqld_db_t:s0`
+.. 卸載，然後重新掛載 `/opt/netapp/`以啟用內容。
+.. 如果您有直接 NFS 裝載，請執行下列命令，將內容設定為 `mysqld_db_t`：
+`mount <nfsshare>:/<mountpoint> /opt/netapp -o context=system_u:object_r:mysqld_db_t:s0`
+
+
+. 確認內容設定是否正確：
+
+
+`ls -dZ /opt/netapp/`
+
+範例輸出：
+
+[listing]
+----
+drwxr-xr-x. mysql root unconfined_u:object_r:mysqld_db_t:s0 /opt/netapp/
+----
+'''
