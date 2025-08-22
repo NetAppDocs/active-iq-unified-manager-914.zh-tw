@@ -11166,7 +11166,6 @@
   <block id="8a13d1a5338f1794b0454274eb4286a1" category="summary">支援REST API、讓您檢視監控及管理儲存環境的相關資訊。Active IQ Unified ManagerAPI也能根據原則來進行資源配置和管理儲存物件。</block>
   <block id="12d49648274bb61cf34ecef5c6ec1acc" category="doc">使用Unified Manager REST API</block>
   <block id="3c7317176d7c7efc96ac34c6081c3782" category="paragraph">您也ONTAP 可以使用Unified Manager支援的API閘道、在所有ONTAP管理的叢集上執行RESUtricity API。</block>
-  <block id="6b4f58d10ed3b35bb65050a16ca6ac3d" category="paragraph">如需 Unified Manager REST API 的相關資訊<block ref="821164fa8c5ff02f6a5d3ecc3d001b16" category="inline-link-macro-rx"></block>，請參閱。</block>
   <block id="f63bfd0f21322837ec283a9385287658" category="summary">觸發切換或切換的事件會導致作用中磁碟區從一個叢集移至災難恢復群組中的另一個叢集。叢集上作用中的磁碟區會停止、並將資料提供給用戶端、其他叢集上的磁碟區也會啟動、並開始提供資料。Unified Manager只會監控作用中和執行中的磁碟區。</block>
   <block id="7edc2199c58b1da2fb3f4eafb729d425" category="paragraph">由於磁碟區會從一個叢集移至另一個叢集、因此建議您同時監控這兩個叢集。Unified Manager的單一執行個體可監控MetroCluster 整個叢集、但有時兩個位置之間的距離需要使用兩個Unified Manager執行個體來監控兩個叢集。下圖顯示Unified Manager的單一執行個體：</block>
   <block id="1f627cf53c59c3dcb003a3d36f72e53e" category="image-alt">顯示 Unified Manager 單一執行個體的 UI 螢幕擷取畫面。</block>
@@ -11974,4 +11973,8 @@
   <block id="57149177e572f9b5329f85c287861767" category="paragraph">Unified Manager 用來將稽核記錄傳送至遠端 Syslog 伺服器。</block>
   <block id="a683cc8dbb0bb0e6b1793e6ba834ff32" category="inline-link">在 Active IQ Unified Manager 主機上更新 Java 之後，服務將無法啟動</block>
   <block id="09baf90eb42ecfec3f212db12b09fe09" category="list-text">您只能在 Unified Manager 主機上安裝一個 Java 版本，否則系統可能無法判斷要使用哪個版本。請參閱。<block ref="c8da8190d4ab26608407458b2e410255" category="inline-link-rx"></block></block>
+  <block id="cc8fe7d78ffdf74546d47ee78ae65dce" category="inline-link-macro">開始使用Active IQ Unified Manager REST API</block>
+  <block id="f6952e0b11db7160562f18106a9c16d6" category="paragraph">有關 Unified Manager REST API 的信息，請參閱<block ref="7c769569c7bbad9af49bc30dbb82753d" category="inline-link-macro-rx"></block>。</block>
+  <block id="46ddffc1618503c5b7bac4767df5963b" category="list-text">收集 15 天的效能資料需要大量 CPU。 NetApp建議您錯開新叢集的新增，以便資料連續性收集輪詢不會同時在太多叢集上執行。此外，如果您在資料連續性收集期間重新啟動 Unified Manager，則收集將停止，並且您將在效能圖表中看到缺失時間範圍的間隙。</block>
+  <block id="40bbb8b87d3598ac9845a44abe43f38c" category="list-text">當新增版本 9.14.1 或更高版本的ONTAP叢集時，通訊將透過雲端代理功能進行。 ONTAP會自動建立具有唯讀權限的內部服務帳戶使用者（例如，clus-agent-xxxx）。如果出現以下情況，Unified Manager 將停止從這些叢集收集數據<block ref="45b8c9da551ea3a5a411451e7d91c303" prefix=" " category="inline-code"></block>用戶已刪除。</block>
 </blocks>
