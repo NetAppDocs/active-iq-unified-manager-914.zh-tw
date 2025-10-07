@@ -3170,7 +3170,6 @@
   <block id="357a35aedd0c37deb3a881df778a9bb4" category="list-text">按一下 * 還原 * 。</block>
   <block id="58c0234305a387b4aa60babbbd858295" category="paragraph">還原程序隨即開始。在後端建立工作以完成還原程序。</block>
   <block id="aa2724776cabef1aaa6642e924be93b0" category="list-text">若要檢視工作進度、請從左側導覽窗格瀏覽至*保護&gt;工作*、從工作清單中檢視還原工作的狀態。</block>
-  <block id="f19eba4a48c0d8762f03ea93717fbfea" category="paragraph">如果Cloud Volumes ONTAP 在發生NDMP錯誤的情況下、還原作業在還原HA叢集之間失敗、您可能需要在目的地叢集中新增明確的AWS路由、以便目的地能夠與來源系統的叢集管理LIF通訊。您可以使用BlueXP執行此組態步驟。</block>
   <block id="7d85117aeb6dd780b49fc8bc5df44937" category="summary">當您靜止不動以停止排程的傳輸後、可以使用「恢復」重新啟用排程的傳輸、以保護來源或主要磁碟區上的資料。在下次排程的傳輸時間間隔、從檢查點恢復傳輸（如果存在）。</block>
   <block id="f7badd266fb3b7da14e5a44e940795fe" category="doc">從「Volume Relationships」（磁碟區關係）頁面、以靜止關係恢復排程的傳輸</block>
   <block id="c49784c79b4a831f938c96963dfe9e09" category="paragraph">在您靜止不動以停止排程的傳輸之後、您可以使用*恢復*重新啟用排程的傳輸、以保護來源或主要磁碟區上的資料。在下次排程的傳輸時間間隔、從檢查點恢復傳輸（如果存在）。</block>
@@ -11977,4 +11976,5 @@
   <block id="f6952e0b11db7160562f18106a9c16d6" category="paragraph">有關 Unified Manager REST API 的信息，請參閱<block ref="7c769569c7bbad9af49bc30dbb82753d" category="inline-link-macro-rx"></block>。</block>
   <block id="46ddffc1618503c5b7bac4767df5963b" category="list-text">收集 15 天的效能資料需要大量 CPU。 NetApp建議您錯開新叢集的新增，以便資料連續性收集輪詢不會同時在太多叢集上執行。此外，如果您在資料連續性收集期間重新啟動 Unified Manager，則收集將停止，並且您將在效能圖表中看到缺失時間範圍的間隙。</block>
   <block id="40bbb8b87d3598ac9845a44abe43f38c" category="list-text">當新增版本 9.14.1 或更高版本的ONTAP叢集時，通訊將透過雲端代理功能進行。 ONTAP會自動建立具有唯讀權限的內部服務帳戶使用者（例如，clus-agent-xxxx）。如果出現以下情況，Unified Manager 將停止從這些叢集收集數據<block ref="45b8c9da551ea3a5a411451e7d91c303" prefix=" " category="inline-code"></block>用戶已刪除。</block>
+  <block id="323f966c65a63cb769e4f899cb19451f" category="paragraph">如果Cloud Volumes ONTAP HA 叢集之間的還原操作因 NDMP 錯誤而失敗，則可能需要在目標叢集中新增明確的 AWS 路由，以便目標可以與來源系統的叢集管理 LIF 進行通訊。您可以使用NetApp控制台執行此設定步驟。</block>
 </blocks>
